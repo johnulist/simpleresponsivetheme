@@ -157,13 +157,13 @@
 </script>
 
 {include file="$tpl_dir./breadcrumb.tpl"}
-<div id="primary_block" class="clearfix row" itemscope itemtype="http://data-vocabulary.org/Product">
-    <div class="twelve columns">
+<div id="primary_block" class="clearfix row">
+    <div class="twelve columns" itemscope itemtype="http://schema.org/product">
         <div id="product-information">
-            <h1 id="product-title">{$product->name|escape:'htmlall':'UTF-8'}</h1>
+            <h1 id="product-title" itemprop="name">{$product->name|escape:'htmlall':'UTF-8'}</h1>
         </div>
         {if $product->description_short}
-            <div id="short_description_content" class="rte align_justify">{$product->description_short}</div>
+            <div id="short_description_content" class="rte align_justify" itemprop="description">{$product->description_short}</div>
         {/if}
     </div>
 
@@ -188,41 +188,36 @@
     <!-- right infos-->
     <div id="pb-right-column" class="six columns">
         <div class="{if isset($images) && count($images) > 1}row{/if}">
-            {if isset($images) && count($images) > 0}
-                {if isset($images) && count($images) > 1}
-                    <div class="two columns thumbs_list_row">
-                        <!-- thumbnails -->
-                        <div id="views_block" class="{if isset($images) && count($images) < 2}hidden{/if}">
-                            <div id="thumbs_list">
-                                <ul id="thumbs_list_frame" class="clearfix">
-                                    {if isset($images)}
-                                        {foreach from=$images item=image name=thumbnails}
-                                        {assign var=imageIds value="`$product->id`-`$image.id_image`"}
-                                        <li id="thumbnail_{$image.id_image}">
-                                            <a href="{$link->getImageLink($product->link_rewrite, $imageIds, thickbox_default)}" rel="other-views" class="thickbox {if $smarty.foreach.thumbnails.first}shown{/if}" title="{$image.legend|htmlspecialchars}">
-                                                <img id="thumb_{$image.id_image}" src="{$link->getImageLink($product->link_rewrite, $imageIds, 'medium_default')}" alt="{$image.legend|htmlspecialchars}" {if $mediumSize}height="{$mediumSize.height}" width="{$mediumSize.width}"{else}height="58" width="58"{/if} />
-                                            </a>
-                                        </li>
-                                        {/foreach}
-                                    {/if}
-                                </ul>
-                            </div>
-                            {if isset($images) && count($images) > 3}
-                                <div id="view_scroll_container" class="clearfix">
-                                    <a id="view_scroll_left" class="hidden" title="{l s='Other views'}" href="javascript:{ldelim}{rdelim}">{l s='Previous'}</a>
-                                    <a id="view_scroll_right" title="{l s='Other views'}" href="javascript:{ldelim}{rdelim}">{l s='Next'}</a>
-                                </div>
+            <div class="two columns thumbs_list_row">
+                <!-- thumbnails -->
+                <div id="views_block" class="{if isset($images) && count($images) < 2}hidden{/if}">
+                    <div id="thumbs_list">
+                        <ul id="thumbs_list_frame" class="clearfix">
+                            {if isset($images)}
+                                {foreach from=$images item=image name=thumbnails}
+                                {assign var=imageIds value="`$product->id`-`$image.id_image`"}
+                                <li id="thumbnail_{$image.id_image}">
+                                    <a href="{$link->getImageLink($product->link_rewrite, $imageIds, thickbox_default)}" rel="other-views" class="thickbox {if $smarty.foreach.thumbnails.first}shown{/if}" title="{$image.legend|htmlspecialchars}">
+                                        <img id="thumb_{$image.id_image}" src="{$link->getImageLink($product->link_rewrite, $imageIds, 'medium_default')}" alt="{$image.legend|htmlspecialchars}" {if $mediumSize}height="{$mediumSize.height}" width="{$mediumSize.width}"{else}height="58" width="58"{/if} />
+                                    </a>
+                                </li>
+                                {/foreach}
                             {/if}
-                        </div>
-                        {if isset($images) && count($images) > 1}<p class="resetimg clear"><span id="wrapResetImages" style="display: none;"><img src="{$img_dir}icon/cancel_11x13.gif" alt="{l s='Cancel'}" width="11" height="13"/> <a id="resetImages" href="{$link->getProductLink($product)}" onclick="$('span#wrapResetImages').hide('slow');return (false);">{l s='Display all pictures'}</a></span></p>{/if}
+                        </ul>
                     </div>
-                {/if}
-            {/if}
+                    {if isset($images) && count($images) > 4}
+                        <div id="view_scroll_container" class="clearfix">
+                            <a id="view_scroll_left" class="hidden" title="{l s='Other views'}" href="javascript:{ldelim}{rdelim}">{l s='Previous'}</a>
+                            <a id="view_scroll_right" title="{l s='Other views'}" href="javascript:{ldelim}{rdelim}">{l s='Next'}</a>
+                        </div>
+                    {/if}
+                </div>
+                {if isset($images) && count($images) > 1}<p class="resetimg clear"><span id="wrapResetImages" style="display: none;"><img src="{$img_dir}icon/cancel_11x13.gif" alt="{l s='Cancel'}" width="11" height="13"/> <a id="resetImages" href="{$link->getProductLink($product)}" onclick="$('span#wrapResetImages').hide('slow');return (false);">{l s='Display all pictures'}</a></span></p>{/if}
+            </div>
             <!-- product img-->
             <div id="image-block" class="{if isset($images) && count($images) > 1}ten columns{/if}">
                 {if $have_image}
                     <span id="view_full_size">
-                        {*<span class="magnifier"></span>*}
                         <img src="{$link->getImageLink($product->link_rewrite, $cover.id_image, 'product_resp')}" {if $jqZoomEnabled}class="jqzoom" alt="{$link->getImageLink($product->link_rewrite, $cover.id_image, 'thickbox_default')}"{else} title="{$product->name|escape:'htmlall':'UTF-8'}" alt="{$product->name|escape:'htmlall':'UTF-8'}" {/if} id="bigpic" width="480" height="480" />
                     </span>
                 {else}
@@ -260,7 +255,7 @@
                 </div>
             {/if}
 
-            <div class="content_prices clearfix">
+            <div class="content_prices clearfix" itemscope itemtype="http://schema.org/offer">
                 {if $product->show_price AND !isset($restricted_country_mode) AND !$PS_CATALOG_MODE}
                     <div class="price">
                         {if !$priceDisplay || $priceDisplay == 2}
@@ -273,10 +268,10 @@
 
                         <p class="our_price_display">
                             {if $priceDisplay >= 0 && $priceDisplay <= 2}
-                                <span id="our_price_display">{convertPrice price=$productPrice}</span>
-                                {*{if $tax_enabled  && ((isset($display_tax_label) && $display_tax_label == 1) OR !isset($display_tax_label))}
-                                    {if $priceDisplay == 1}{l s='tax excl.'}{else}{l s='tax incl.'}{/if}
-                                {/if}*}
+                                <span id="our_price_display" itemprop="price">{convertPrice price=$productPrice}</span>
+                                {if $tax_enabled  && ((isset($display_tax_label) && $display_tax_label == 1) OR !isset($display_tax_label))}
+                                    <span class="tax_display">{if $priceDisplay == 1}{l s='tax excl.'}{else}{l s='tax incl.'}{/if}</span>
+                                {/if}
                             {/if}
                             {if $product->on_sale}
                                 <span class="advert">{l s='On sale!'}</span>
@@ -298,16 +293,22 @@
                         {/if}
                     </div>
                     <p id="reduction_percent" {if !$product->specificPrice OR $product->specificPrice.reduction_type != 'percentage'} style="display:none;"{/if}><span id="reduction_percent_display">{if $product->specificPrice AND $product->specificPrice.reduction_type == 'percentage'}-{$product->specificPrice.reduction*100}%{/if}</span></p>
-                    <p id="reduction_amount" {if !$product->specificPrice OR $product->specificPrice.reduction_type != 'amount' && $product->specificPrice.reduction|intval ==0} style="display:none"{/if}><span id="reduction_amount_display">{if $product->specificPrice AND $product->specificPrice.reduction_type == 'amount' && $product->specificPrice.reduction|intval !=0}-{convertPrice price=$product->specificPrice.reduction|floatval}{/if}</span></p>
-                    {if $product->specificPrice AND $product->specificPrice.reduction}
+                    <p id="reduction_amount" {if !$product->specificPrice OR $product->specificPrice.reduction_type != 'amount' || $product->specificPrice.reduction|intval ==0} style="display:none"{/if}>
+                        <span id="reduction_amount_display">
+                        {if $product->specificPrice AND $product->specificPrice.reduction_type == 'amount' AND $product->specificPrice.reduction|intval !=0}
+                            -{convertPrice price=$productPriceWithoutReduction-$productPrice|floatval}
+                        {/if}
+                        </span>
+                    </p>
+                    {if $product->specificPrice AND $product->specificPrice.reduction && $product->specificPrice.reduction > 0}
                         <p id="old_price" class="old_price">
                             <span>
                                 {if $priceDisplay >= 0 && $priceDisplay <= 2}
                                     {if $productPriceWithoutRedution > $productPrice}
                                         <span id="old_price_display">{convertPrice price=$productPriceWithoutRedution}</span>
-                                        {*{if $tax_enabled && $display_tax_label == 1}
-                                            {if $priceDisplay == 1}{l s='tax excl.'}{else}{l s='tax incl.'}{/if}
-                                        {/if}*}
+                                        {if $tax_enabled && $display_tax_label == 1}
+                                            <span class="tax_display">{if $priceDisplay == 1}{l s='tax excl.'}{else}{l s='tax incl.'}{/if}</span>
+                                        {/if}
                                     {/if}
                                 {/if}
                             </span>
@@ -336,19 +337,19 @@
                     <div class="availability_reference"{if (isset($groups) OR !$product->reference) && (($product->quantity <= 0 && !$product->available_later && $allow_oosp) OR ($product->quantity > 0 && !$product->available_now) OR !$product->available_for_order OR $PS_CATALOG_MODE)}style="display: none;"{/if}>
                         <p id="product_reference" {if isset($groups) OR !$product->reference}style="display: none;"{/if}>
                             <label for="product_reference">{l s='Reference:'} </label>
-                            <span class="editable" itemprop="identifier" content="mpn:{$product->reference|escape:'htmlall':'UTF-8'}">{$product->reference|escape:'htmlall':'UTF-8'}</span>
+                            <span class="editable">{$product->reference|escape:'htmlall':'UTF-8'}</span>
                         </p>
 
                         <p id="availability_statut"{if ($product->quantity <= 0 && !$product->available_later && $allow_oosp) OR ($product->quantity > 0 && !$product->available_now) OR !$product->available_for_order OR $PS_CATALOG_MODE} style="display: none;"{/if}>
                             <label id="availability_label">{l s='Availability:'}</label>
                             {if $product->quantity <= 0}
                                 {if $allow_oosp}
-                                    <span id="availability_value" class="warning_inline">{$product->available_later}</span>
+                                    <span id="availability_value" class="warning_inline" itemprop="availability" content="preorder">{$product->available_later}</span>
                                 {else}
-                                    <span id="availability_value" class="warning_inline">{l s='This product is no longer in stock'}</span>
+                                    <span id="availability_value" class="warning_inline" itemprop="availability" content="out_of_stock">{l s='This product is no longer in stock'}</span>
                                 {/if}
                             {else}
-                                <span id="availability_value">{$product->available_now}</span>
+                                <span id="availability_value" itemprop="availability" content="in_stock">{$product->available_now}</span>
                             {/if}
                         </p>
                     </div>
